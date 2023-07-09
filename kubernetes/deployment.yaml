@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: app
+          image: mourajj/jonathan-golang-intview:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: POSTGRES_USER
+              value: "jonathan"
+            - name: POSTGRES_PASSWORD
+              value: "123"
+            - name: POSTGRES_DB
+              value: "codelit"
+          volumeMounts:
+            - name: migrations-volume
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: migrations-volume
+          hostPath:
+            path: /app/migrations

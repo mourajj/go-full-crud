@@ -1,0 +1,153 @@
+swagger: '2.0'
+info:
+  title: Codelitt API Documentation
+  version: 1.0.0
+paths:
+  /members:
+    get:
+      summary: Get all members
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/GetMembersResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      summary: Creates a new member
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: member
+          description: Member object
+          required: true
+          schema:
+            $ref: '#/definitions/Member'
+      responses:
+        '201':
+          description: Member created successfully
+          schema:
+            $ref: '#/definitions/Member'
+        '400':
+          description: Invalid member data or bad request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /members/{id}:
+    get:
+      summary: Get a member by ID
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Member ID
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Member'
+        '400':
+          description: Invalid member ID
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Member not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      summary: Update a member
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Member ID
+          required: true
+          type: integer
+        - in: body
+          name: member
+          description: Member object
+          required: true
+          schema:
+            $ref: '#/definitions/Member'
+      responses:
+        '200':
+          description: Member updated successfully
+          schema:
+            $ref: '#/definitions/Member'
+        '400':
+          description: Invalid member ID or member data
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      summary: Delete a member
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Member ID
+          required: true
+          type: integer
+      responses:
+        '204':
+          description: Member deleted successfully
+        '400':
+          description: Invalid member ID
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+definitions:
+  Member:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      type:
+        type: string
+      role:
+        type: string
+      duration:
+        type: integer
+      tags:
+        type: array
+        items:
+          type: string
+    required:
+      - id
+      - name
+      - type
+  GetMembersResponse:
+    type: array
+    items:
+      $ref: '#/definitions/Member'
+  ErrorResponse:
+    type: object
+    properties:
+      error:
+        type: string

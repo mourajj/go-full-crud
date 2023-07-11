@@ -1,4 +1,9 @@
-In this Project, I've builded a backend of an application that helps us managing our team using REST.
+## Member Manager
+
+This is the member manager application, a crud application responsible for managing members.
+
+![Diagrama em branco (1)](https://github.com/mourajj/go-full-crud/assets/27701706/07a52fc6-57df-4024-9209-856bf99b03a7)
+
 
 ### Features
 - A member has a name and a type the late one can be an employee or a contractor.
@@ -8,10 +13,8 @@ In this Project, I've builded a backend of an application that helps us managing
 - There is a Kubernetes folder with the manifests of needed resources to deploy it on Kubernetes and receive external traffic
 
 
-## Evaluation
-| Functionality     |                                                                |
+| Features     |                                                                |
 |-------------------|----------------------------------------------------------------|
-|                   | Matches the proposed requirements                              |              |
 |                   | Separation of business logic and persistence layers            |
 |                   | Input validations                                              |
 |                   | Standard HTTP error codes                                      |

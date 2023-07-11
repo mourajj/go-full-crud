@@ -1,6 +1,6 @@
 In this Project, I've builded a backend of an application that helps us managing our team using REST.
 
-### Features and Requirements
+### Features
 - A member has a name and a type the late one can be an employee or a contractor.
 - - If it's a contractor, we want to store the the duration of the contract as an integer.
 - - If it's an employee, we need to store their role, for instance: Software Engineer, Project Manager and so on.

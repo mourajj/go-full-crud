@@ -12,7 +12,7 @@ services:
     env_file:
       - .env
   db:
-    image: postgres:latest
+    image: postgres:14-alpine
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -20,4 +20,4 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./migrations:/docker-entrypoint-initdb.d
+      - ./db:/docker-entrypoint-initdb.d

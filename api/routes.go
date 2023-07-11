@@ -52,29 +52,7 @@ func (api *API) CreateMember(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Invalid member data")
 	}
 
-	if member.Name == "" {
-		return c.JSON(http.StatusBadRequest, "Members must have a name")
-	}
-
-	if member.Type == "contractor" {
-		if member.Duration == 0 {
-			return c.JSON(http.StatusBadRequest, "Contractors must have a duration")
-		}
-		if member.Role != "" {
-			return c.JSON(http.StatusBadRequest, "Contractors must not have a role")
-		}
-	} else if member.Type == "employee" {
-		if member.Role == "" {
-			return c.JSON(http.StatusBadRequest, "Employees must have a role")
-		}
-		if member.Duration != 0 {
-			return c.JSON(http.StatusBadRequest, "Employees must not have a duration")
-		}
-
-		member.Duration = 0 //setting a default value for employees
-	} else {
-		return c.JSON(http.StatusBadRequest, "Invalid member type, please use 'contractor' or 'employee'")
-	}
+	checkMemberType(member, c)
 
 	err := api.dbRepo.CreateMember(member)
 	if err != nil {
@@ -95,29 +73,7 @@ func (api *API) UpdateMember(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Invalid member data")
 	}
 
-	if member.Name == "" {
-		return c.JSON(http.StatusBadRequest, "Members must have a name")
-	}
-
-	if member.Type == "contractor" {
-		if member.Duration == 0 {
-			return c.JSON(http.StatusBadRequest, "Contractors must have a duration")
-		}
-		if member.Role != "" {
-			return c.JSON(http.StatusBadRequest, "Contractors must not have a role")
-		}
-	} else if member.Type == "employee" {
-		if member.Role == "" {
-			return c.JSON(http.StatusBadRequest, "Employees must have a role")
-		}
-		if member.Duration != 0 {
-			return c.JSON(http.StatusBadRequest, "Employees must not have a duration")
-		}
-
-		member.Duration = 0 //setting a default value for employees
-	} else {
-		return c.JSON(http.StatusBadRequest, "Invalid member type, please use 'contractor' or 'employee'")
-	}
+	checkMemberType(member, c)
 	member.ID = id
 
 	_, err = api.dbRepo.GetMemberByID(member.ID)
@@ -142,4 +98,33 @@ func (api *API) DeleteMember(c echo.Context) error {
 		api.dbRepo.DeleteMember(id)
 		return c.NoContent(http.StatusNoContent)
 	}
+}
+
+func checkMemberType(member *models.Member, c echo.Context) error {
+
+	if member.Name == "" {
+		return c.JSON(http.StatusBadRequest, "Members must have a name")
+	}
+
+	if member.Type == "contractor" {
+		if member.Duration == 0 {
+			return c.JSON(http.StatusBadRequest, "Contractors must have a duration")
+		}
+		if member.Role != "" {
+			return c.JSON(http.StatusBadRequest, "Contractors must not have a role")
+		}
+	} else if member.Type == "employee" {
+		if member.Role == "" {
+			return c.JSON(http.StatusBadRequest, "Employees must have a role")
+		}
+		if member.Duration != 0 {
+			return c.JSON(http.StatusBadRequest, "Employees must not have a duration")
+		}
+
+		member.Duration = 0 //setting a default value for employees
+	} else {
+		return c.JSON(http.StatusBadRequest, "Invalid member type, please use 'contractor' or 'employee'")
+	}
+
+	return nil
 }

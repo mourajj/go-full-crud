@@ -20,4 +20,4 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./migrations:/docker-entrypoint-initdb.d
+      - ./db/script.sql:/docker-entrypoint-initdb.d/script.sql

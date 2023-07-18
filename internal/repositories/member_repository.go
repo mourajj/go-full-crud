@@ -1,9 +1,14 @@
 package repositories
 
 import (
+	grpcclient "codelit/internal/client"
+	"codelit/internal/client/pb"
 	"codelit/internal/models"
+	"context"
 	"database/sql"
 	"errors"
+	"fmt"
+	"log"
 
 	"github.com/lib/pq"
 )
@@ -78,6 +83,19 @@ func (r *DBRepository) CreateMember(member *models.Member) error {
 	if err != nil {
 		return err
 	}
+	conn := grpcclient.StartGRPC()
+	client := pb.NewGreeterClient(conn)
+
+	req := &pb.HelloRequest{
+		Name: member.Name,
+	}
+
+	res, err := client.SayHello(context.Background(), req)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(res)
 	//TODO: Add validate member logic
 	return nil
 }

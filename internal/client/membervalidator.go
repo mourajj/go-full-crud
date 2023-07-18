@@ -1,7 +1,7 @@
 package grpcclient
 
 import (
-	"codelit/internal/gRPCclient/pb"
+	"codelit/internal/client/pb"
 	"context"
 	"fmt"
 	"log"

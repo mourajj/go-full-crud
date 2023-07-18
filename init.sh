@@ -2,5 +2,5 @@
 
  echo "###### Initializing application! ######"
 
-docker-compose down --volumes
+docker compose down --volume
 docker compose up --build

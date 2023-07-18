@@ -52,9 +52,12 @@ func (api *API) CreateMember(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Invalid member data")
 	}
 
-	checkMemberType(member, c)
+	notValid, err := checkMemberType(member, c)
+	if notValid {
+		return err
+	}
 
-	err := api.dbRepo.CreateMember(member)
+	err = api.dbRepo.CreateMember(member)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -73,7 +76,10 @@ func (api *API) UpdateMember(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Invalid member data")
 	}
 
-	checkMemberType(member, c)
+	notValid, err := checkMemberType(member, c)
+	if notValid {
+		return err
+	}
 	member.ID = id
 
 	_, err = api.dbRepo.GetMemberByID(member.ID)
@@ -100,31 +106,31 @@ func (api *API) DeleteMember(c echo.Context) error {
 	}
 }
 
-func checkMemberType(member *models.Member, c echo.Context) error {
+func checkMemberType(member *models.Member, c echo.Context) (bool, error) {
 
 	if member.Name == "" {
-		return c.JSON(http.StatusBadRequest, "Members must have a name")
+		return true, c.JSON(http.StatusBadRequest, "Members must have a name")
 	}
 
 	if member.Type == "contractor" {
 		if member.Duration == 0 {
-			return c.JSON(http.StatusBadRequest, "Contractors must have a duration")
+			return true, c.JSON(http.StatusBadRequest, "Contractors must have a duration")
 		}
 		if member.Role != "" {
-			return c.JSON(http.StatusBadRequest, "Contractors must not have a role")
+			return true, c.JSON(http.StatusBadRequest, "Contractors must not have a role")
 		}
 	} else if member.Type == "employee" {
 		if member.Role == "" {
-			return c.JSON(http.StatusBadRequest, "Employees must have a role")
+			return true, c.JSON(http.StatusBadRequest, "Employees must have a role")
 		}
 		if member.Duration != 0 {
-			return c.JSON(http.StatusBadRequest, "Employees must not have a duration")
+			return true, c.JSON(http.StatusBadRequest, "Employees must not have a duration")
 		}
 
 		member.Duration = 0 //setting a default value for employees
 	} else {
-		return c.JSON(http.StatusBadRequest, "Invalid member type, please use 'contractor' or 'employee'")
+		return true, c.JSON(http.StatusBadRequest, "Invalid member type, please use 'contractor' or 'employee'")
 	}
 
-	return nil
+	return false, nil
 }

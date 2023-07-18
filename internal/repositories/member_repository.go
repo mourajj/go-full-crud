@@ -89,14 +89,12 @@ func (r *DBRepository) CreateMember(member *models.Member) error {
 	req := &pb.HelloRequest{
 		Name: member.Name,
 	}
-
 	res, err := client.SayHello(context.Background(), req)
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	
 	fmt.Println(res)
-	//TODO: Add validate member logic
 	return nil
 }
 

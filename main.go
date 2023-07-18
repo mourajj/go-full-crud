@@ -20,7 +20,7 @@ func main() {
 		log.Fatal("Error loading .env file:", err)
 	}
 
-	dbHost := os.Getenv("DB_HOST")
+	dbHost := os.Getenv("DOCKER_INTERNAL")
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")

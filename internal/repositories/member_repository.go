@@ -78,6 +78,7 @@ func (r *DBRepository) CreateMember(member *models.Member) error {
 	if err != nil {
 		return err
 	}
+	//TODO: Add validate member logic
 	return nil
 }
 

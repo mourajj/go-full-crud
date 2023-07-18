@@ -8,7 +8,7 @@ import (
 )
 
 func StartGRPC() *grpc.ClientConn {
-	conn, err := grpc.Dial("localhost:9000", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial("host.docker.internal:9000", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal(err)
 	}

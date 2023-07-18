@@ -2,6 +2,7 @@ package main
 
 import (
 	"codelit/api"
+	grpcclient "codelit/internal/gRPCclient"
 	"codelit/internal/repositories"
 	"database/sql"
 	"log"
@@ -26,6 +27,7 @@ func main() {
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 
+	grpcclient.StartGRPC()
 	e := echo.New()
 
 	e.Use(middleware.Logger())

@@ -81,7 +81,7 @@ func (r *DBRepository) CreateMember(member *models.Member) error {
 	tagsArray := pq.Array(member.Tags) // Convert slice of strings to pq.Array
 	err := r.db.QueryRow(query, member.Name, member.Type, member.Role, member.Duration, tagsArray).Scan(&member.ID)
 
-	go validateMember(*member) // Validates member concurrently
+	go validateMember(member) // Validates member concurrently
 
 	if err != nil {
 		return err
@@ -110,7 +110,7 @@ func (r *DBRepository) DeleteMember(id int) error {
 	return nil
 }
 
-func validateMember(member models.Member) {
+func validateMember(member *models.Member) {
 	conn := grpcclient.StartGRPC()
 	client := pb.NewGreeterClient(conn)
 

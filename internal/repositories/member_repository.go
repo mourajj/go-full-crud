@@ -80,21 +80,13 @@ func (r *DBRepository) CreateMember(member *models.Member) error {
 	VALUES ($1, $2, $3, $4, $5) RETURNING id`
 	tagsArray := pq.Array(member.Tags) // Convert slice of strings to pq.Array
 	err := r.db.QueryRow(query, member.Name, member.Type, member.Role, member.Duration, tagsArray).Scan(&member.ID)
+
+	go validateMember(*member) // Validates member concurrently
+
 	if err != nil {
 		return err
 	}
-	conn := grpcclient.StartGRPC()
-	client := pb.NewGreeterClient(conn)
 
-	req := &pb.HelloRequest{
-		Name: member.Name,
-	}
-	res, err := client.SayHello(context.Background(), req)
-	if err != nil {
-		log.Fatal(err)
-	}
-	
-	fmt.Println(res)
 	return nil
 }
 
@@ -116,4 +108,18 @@ func (r *DBRepository) DeleteMember(id int) error {
 		return err
 	}
 	return nil
+}
+
+func validateMember(member models.Member) {
+	conn := grpcclient.StartGRPC()
+	client := pb.NewGreeterClient(conn)
+
+	req := &pb.HelloRequest{
+		Name: member.Name,
+	}
+	res, err := client.SayHello(context.Background(), req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(res)
 }

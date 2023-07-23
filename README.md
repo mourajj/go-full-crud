@@ -1,11 +1,17 @@
 ## Member Manager
 
 This is the member manager application, a crud application responsible for managing members.
-There are 2 more repos that makes architecture work, [member-validator](https://github.com/mourajj/member-validator) and [member-notification](https://github.com/mourajj/member-notification)
 ![Diagrama em branco (1)](https://github.com/mourajj/go-full-crud/assets/27701706/07a52fc6-57df-4024-9209-856bf99b03a7)
 
+This architecture is based on 2 more services:
 
-### Features
+### [Member-validator](https://github.com/mourajj/member-validator)  
+Responsible for validating all the members created (gRPC)
+
+### [Member-notification](https://github.com/mourajj/member-notification)
+Responsible for initializing the kafka cluster and itself, in order to receive all the notification messages and log into AWS.
+
+### Manager features
 - A member has a name and a type the late one can be an employee or a contractor.
 - - If it's a contractor, we want to store the the duration of the contract as an integer.
 - - If it's an employee, we need to store their role, for instance: Software Engineer, Project Manager and so on.

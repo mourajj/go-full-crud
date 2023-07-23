@@ -1,7 +1,7 @@
 ## Member Manager
 
 This is the member manager application, a crud application responsible for managing members.
-
+There are 2 more repos that makes architecture work, [member-validator](https://github.com/mourajj/member-validator) and [member-notification](https://github.com/mourajj/member-notification)
 ![Diagrama em branco (1)](https://github.com/mourajj/go-full-crud/assets/27701706/07a52fc6-57df-4024-9209-856bf99b03a7)
 
 

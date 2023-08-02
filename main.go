@@ -2,13 +2,13 @@ package main
 
 import (
 	"codelit/internal/api"
+	"codelit/internal/httpserver"
 	"codelit/internal/repositories"
 	"database/sql"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	_ "github.com/lib/pq"
 )
@@ -26,7 +26,7 @@ func main() {
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 
-	e := echo.New()
+	server := httpserver.New()
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())

@@ -9,7 +9,6 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/labstack/echo/middleware"
 	_ "github.com/lib/pq"
 )
 
@@ -26,10 +25,20 @@ func main() {
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 
-	server := httpserver.New()
+	// e.GET("/members", httpGetMembers)
+	// e.GET("/members/:id", api.GetMemberByID)
+	// e.POST("/members", api.CreateMember)
+	// e.PUT("/members/:id", api.UpdateMember)
+	// e.DELETE("/members/:id", api.DeleteMember)
 
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	server, echo := httpserver.New(8080)
+	defer server.Stop()
+
+	echo.GET("/members", httpserver.GetMemberHandler)
+	echo.GET("/members/:id", httpserver.GetMemberByIDHandler)
+	echo.PUT("/members/:id", httpserver.UpdateMemberHandler)
+	echo.GET("/members", httpserver.CreateMemberHandler)
+	echo.DELETE("/members/:id", httpserver.CreateMemberHandler)
 
 	// Database setup
 	db, err := sql.Open("postgres", "host="+dbHost+" port="+dbPort+" user="+dbUser+" password="+dbPassword+" dbname="+dbName+" sslmode=disable")

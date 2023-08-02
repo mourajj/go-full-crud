@@ -10,43 +10,6 @@ import (
 	"github.com/labstack/echo"
 )
 
-// Route defining an HTTP endpoint
-type Route struct {
-	HttpMethod     string
-	HttpPath       string
-	HttpHandler    HTTPHandler
-	HttpMiddleware []HttpMiddleware
-}
-
-func NewRoute(httpMethod string, httpPath string, httpHandler HTTPHandler, middleware ...HttpMiddleware) *Route {
-	return &Route{
-		HttpMethod:     httpMethod,
-		HttpPath:       httpPath,
-		HttpHandler:    httpHandler,
-		HttpMiddleware: middleware,
-	}
-}
-
-type RouteGroup struct {
-	Group          string
-	Routes         []*Route
-	HttpMiddleware []HttpMiddleware
-}
-
-// Adds a Route to the RouteGroup
-func (rg *RouteGroup) AddRoute(route *Route) {
-	rg.Routes = append(rg.Routes, route)
-}
-
-// Factory to create a RouteGroup
-func NewRouteGroup(group string, middleware ...HttpMiddleware) *RouteGroup {
-	return &RouteGroup{
-		Group:          group,
-		Routes:         make([]*Route, 0),
-		HttpMiddleware: middleware,
-	}
-}
-
 // The EchoServer is a wrapper around the Echo library that adds start/stop behavior
 // and internally configures routes
 type EchoServer struct {
@@ -55,8 +18,14 @@ type EchoServer struct {
 	server          *echo.Echo
 }
 
+type Route struct {
+	HttpPath       string
+	HttpHandler    echo.HandlerFunc
+	HttpMiddleware echo.MiddlewareFunc
+}
+
 // Creates a new EchoServer
-func New(port int, middleware ...HttpMiddleware) *EchoServer {
+func New(port int, middleware ...HttpMiddleware) (*EchoServer, *echo.Echo) {
 	server := echo.New()
 	server.HideBanner = true
 	server.HidePort = true
@@ -75,7 +44,7 @@ func New(port int, middleware ...HttpMiddleware) *EchoServer {
 		server:          server,
 	}
 
-	return &echoServer
+	return &echoServer, server
 }
 
 // Asynchronously starts the Echo server.
@@ -90,27 +59,6 @@ func (e *EchoServer) Start() <-chan error {
 		}
 	}()
 	return errorCh
-}
-
-// Adds a HTTP Route
-func (e *EchoServer) AddRoute(route *Route) {
-	e.server.Add(
-		route.HttpMethod,
-		route.HttpPath,
-		route.HttpHandler.Handler(),
-		mapMiddleware(route.HttpMiddleware)...)
-}
-
-// Adds a HTTP RouteGroup
-func (e *EchoServer) AddRouteGroup(routeGroup *RouteGroup) {
-	group := e.server.Group(routeGroup.Group, mapMiddleware(routeGroup.HttpMiddleware)...)
-	for _, route := range routeGroup.Routes {
-		group.Add(
-			route.HttpMethod,
-			route.HttpPath,
-			route.HttpHandler.Handler(),
-			mapMiddleware(route.HttpMiddleware)...)
-	}
 }
 
 // Gracefully stops the Echo server

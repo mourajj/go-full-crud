@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"codelit/internal/models"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -12,6 +13,26 @@ import (
 type HTTPHandler interface {
 	Handler() echo.HandlerFunc
 }
+type Handler struct{}
+
+func GetMemberHandler(c echo.Context) error {
+	code := http.StatusInternalServerError
+	if he, ok := err.(*echo.HTTPError); ok {
+		code = he.Code
+	}
+	c.Logger().Error(err)
+	errorPage := fmt.Sprintf("%d.html", code)
+	if err := c.File(errorPage); err != nil {
+		c.Logger().Error(err)
+	}
+
+	return nil
+}
+
+func GetMemberByIDHandler(c echo.Context) error {}
+func CreateMemberHandler(c echo.Context) error  {}
+func UpdateMemberHandler(c echo.Context) error  {}
+func DeleteMemberHandler(c echo.Context) error  {}
 
 func (api *API) GetMembers(c echo.Context) error {
 	members, err := api.dbRepo.GetAllMembers()

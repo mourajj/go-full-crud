@@ -36,9 +36,10 @@ func main() {
 
 	echo.GET("/members", httpserver.GetMemberHandler)
 	echo.GET("/members/:id", httpserver.GetMemberByIDHandler)
+	echo.DELETE("/members/:id", httpserver.CreateMemberHandler)
 	echo.PUT("/members/:id", httpserver.UpdateMemberHandler)
 	echo.GET("/members", httpserver.CreateMemberHandler)
-	echo.DELETE("/members/:id", httpserver.CreateMemberHandler)
+	
 
 	// Database setup
 	db, err := sql.Open("postgres", "host="+dbHost+" port="+dbPort+" user="+dbUser+" password="+dbPassword+" dbname="+dbName+" sslmode=disable")
